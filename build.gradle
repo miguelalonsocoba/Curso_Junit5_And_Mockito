@@ -24,6 +24,10 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.0-jre'
 
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+   	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0-RC1'
+	
+	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0-RC1'
+	
 }
