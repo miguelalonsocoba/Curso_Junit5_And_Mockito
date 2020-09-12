@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -106,6 +107,18 @@ public class AddTest {
 		// Assert.
 		assertEquals(9, result, "The response is not 9.");
 		
+	}
+	
+	@Test
+	public void testWithArgumentMatcher() {
+		// 1.- Arrange - Organizar
+		when(validNumber.check(ArgumentMatchers.anyInt())).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		int result = add.add(4, 6);
+		
+		// 3.- Assert - afirmación.
+		assertEquals(10, result, "The result is not 10");
 	}
 
 
