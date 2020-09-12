@@ -2,6 +2,11 @@ package mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -20,6 +26,9 @@ public class AddTest {
 
 	@Mock
 	private ValidNumber validNumber;
+	
+	@Mock
+	private Print print;
 
 	@BeforeEach
 	public void setUp() {
@@ -120,6 +129,115 @@ public class AddTest {
 		// 3.- Assert - afirmación.
 		assertEquals(10, result, "The result is not 10");
 	}
+	
+	/**
+	 * Verificar que validNumber.check(4), se ejecuta dos veces.
+	 */
+	@Test
+	public void addPrintTest() {
+		// 1.- Arrange - Organizar
+		when(validNumber.check(4)).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		add.addPrint(4, 4);
+		
+		// 3.- Assert - afirmación.
+//		Mockito.verify(validNumber.check(4));
+		verify(validNumber, times(2)).check(4);
+		
+	}
+	
+	/**
+	 * Verifica que validNumber.check(4) se ejecuta una sola vez.
+	 */
+	@Test
+	public void addPrintTest2() {
+		// 1.- Arrange - Organizar
+		when(validNumber.check(4)).thenReturn(true);
+		when(validNumber.check(5)).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		add.addPrint(4, 5);
+		
+		// 3.- Assert - afirmación.
+		verify(validNumber).check(4);
+		
+	}
+	
+	/**
+	 * Verifica que validNumber.check(99) no se ejecuta ni una sola vez..
+	 */
+	@Test
+	public void addPrintTest3() {
+		// 1.- Arrange - Organizar
+		when(validNumber.check(4)).thenReturn(true);
+		when(validNumber.check(5)).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		add.addPrint(4, 5);
+		
+		// 3.- Assert - afirmación.
+		verify(validNumber, never()).check(99);
+		
+	}
+	
+	/**
+	 * Verifica que validNumber.check(99) se ejecuta al menos una vez.
+	 */
+	@Test
+	public void addPrintTest4() {
+		// 1.- Arrange - Organizar
+		when(validNumber.check(4)).thenReturn(true);
+		when(validNumber.check(5)).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		add.addPrint(4, 5);
+		
+		// 3.- Assert - afirmación.
+		verify(validNumber, atLeast(1)).check(4);
+		
+	}
+	
+	/**
+	 * Verifica que validNumber.check(4) se ejecuta como maximo el numeor que se indique.
+	 */
+	@Test
+	public void addPrintTest5() {
+		// 1.- Arrange - Organizar
+		when(validNumber.check(4)).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		add.addPrint(4, 5);
+		
+		// 3.- Assert - afirmación.
+		verify(validNumber, atMost(2)).check(4);
+		
+	}
+	
+	@Test
+	public void addPrintVerifyTest() {
+		// 1.- Arrange - Organizar.
+		when(validNumber.check(4)).thenReturn(true);
+		
+		// 2.- Actuacion - Actuación.
+		add.addPrint(4, 4);
+		
+		// 3.- Assert - Afirmación.
+//		verify(print).showMessage(ArgumentMatchers.anyInt());
+		verify(print).showMessage(8);
+		verify(print, never()).showError();
+	}
+	
+	@Test
+	public void addPrintErrorTest() {
+		when(validNumber.check(ArgumentMatchers.anyInt())).thenReturn(false);
+	
+		add.addPrint(4, 4);
+		
+		verify(print).showError();
+		verify(print, never()).showMessage(ArgumentMatchers.anyInt());
+	}
+
 
 
 }
