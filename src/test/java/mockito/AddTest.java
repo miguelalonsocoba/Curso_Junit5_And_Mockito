@@ -9,6 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +20,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -251,6 +255,38 @@ public class AddTest {
 		// 3.- Assert - afirmación.
 		verify(print).showMessage(captor.capture());
 		assertEquals(captor.getValue().intValue(), 9);
+	}
+
+	// Sirve de espia, los metodo de este objeto tendran un comportaminero normal y
+	// no seran burlados como en el ejemolo del Mock. Devuelve el resultado real.
+	@Spy
+	List<String> spyList = new ArrayList<>();
+
+	// Se burla para obtener una respuesta que se le indique.
+	@Mock
+	List<String> mockList = new ArrayList<>();
+
+	@Test
+	public void spyTest() {
+		spyList.add("1");
+		spyList.add("2");
+		verify(spyList).add("1");
+		verify(spyList).add("2");
+//		verify(spyList).add("3"); //Falla porque no se ha invocado el metodo add con el valor 3.
+
+		assertEquals(2, spyList.size());
+	}
+
+	@Test
+	public void mockTest() {
+		mockList.add("1");
+		mockList.add("2");
+		verify(mockList).add("1");
+		verify(mockList).add("2");
+		when(mockList.size()).thenReturn(2);
+//		verify(mockList).add("3"); // Falla porque no se ha invocado el metodo add con el valor 3.X	f
+
+		assertEquals(2, mockList.size()); // Falla porque el metodo size no ha sido mockeado.
 	}
 
 }
